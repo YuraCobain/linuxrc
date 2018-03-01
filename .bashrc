@@ -116,10 +116,12 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
-function gr { grep -R --exclude=\*.{log,0,1,2,js} "$1" * ; }
+function gr { grep -irn --exclude=\*.{log,0,1,2,js} "$1" * ; }
 
 # Yavide alias
 alias g="gvim"
 alias gide="gvim --servername yavide -f -N -u /home/ikobein/opt/yavide/.vimrc"
 
-export PATH=~/.npm-global/bin:$PATH
+export PATH=~/bin/git-repo:$PATH
+# Yavide alias
+export MAP_PATH_PREFIX=/media/nds_maps/
