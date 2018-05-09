@@ -118,10 +118,43 @@ if ! shopt -oq posix; then
 fi
 function gr { grep -irn --exclude=\*.{log,0,1,2,js} "$1" * ; }
 
-# Yavide alias
+#find file|dir entity up to file hierarhy
+find-up () {
+  path=$(pwd)
+  while [[ "$path" != "" && ! -e "$path/$1" ]]; do
+    path=${path%/*}
+  done
+  echo "$path"
+}
+# generate a slice of compdb by specigfied subpath
+function compdb-slice {
+    local output="compile_commands.json"
+    
+    local proj_root_dir=$(find-up ".repo")
+    if [ -z "$proj_root_dir" ]; then
+        echo "root of project dir is not found. exit"
+        exit
+    fi
+
+    local subpath="${PWD#"$proj_root_dir"}"
+    local db=$proj_root_dir"/build/compile_commands.json"
+    echo "root of project dir is found: ${proj_root_dir}"
+    echo "root comp DB $db"
+    echo "subpath to slice $subpath"
+
+    cat $db | jq --arg sp $subpath '.[] | select(.file | test ($sp))' | jq . -s > $output ; }
+
+# format commit
+function format-commit() {
+    git diff -U0 --no-color HEAD^ | clang-format-diff-5.0 -p1 -i ; }
+
 alias g="gvim"
-alias gide="gvim --servername yavide -f -N -u /home/ikobein/opt/yavide/.vimrc"
 
 export PATH=~/bin/git-repo:$PATH
 # Yavide alias
-export MAP_PATH_PREFIX=/media/nds_maps/
+export MAP_PATH_PREFIX=~/maps/
+
+export REPO_URL=ssh://$USER@gerrit.it.here.com:29418/external/git-repo
+export SPARTA_REPO_PATH="/home/kobein/dev/projects/sparta"
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash

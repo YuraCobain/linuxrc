@@ -13,6 +13,8 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 
 " Keep Plugin commands between vundle#begin/end.
+Plugin 'bogado/file-line'
+
 Plugin 'tpope/vim-fugitive'
 
 Plugin 'tpope/vim-surround'
@@ -64,6 +66,8 @@ Plugin 'octol/vim-cpp-enhanced-highlight'
 Plugin 'godlygeek/tabular'
 Plugin 'plasticboy/vim-markdown' "better markdown support
 
+Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plugin 'junegunn/fzf.vim'
 
 " better cooperation with tmux
 Plugin 'christoomey/vim-tmux-navigator'
@@ -107,9 +111,6 @@ Plugin 'vim-scripts/DoxygenToolkit.vim'
 
 Plugin 'vim-scripts/MultipleSearch'
 
-Plugin 'junegunn/fzf'
-Plugin 'junegunn/fzf.vim'
-
 Plugin 'junegunn/vim-easy-align'
 
 Plugin 'lilydjwg/colorizer'
@@ -121,6 +122,7 @@ Plugin 'rhysd/devdocs.vim'
 let g:colorizer_startup = 0
 
 Plugin 'vim-scripts/ccase.vim'
+
 Plugin 'Valloric/YouCompleteMe'
 
 Plugin 'lyuts/vim-rtags'  
@@ -165,7 +167,7 @@ set textwidth=0
 set wrapmargin=0  "Disable line wrap
 set ruler   "Show row and column ruler information
 set showbreak=+++   "Wrap-broken line prefix
-"set textwidth=100   "Line wrap (number of cols)
+set textwidth=100   "Line wrap (number of cols)
 set showmatch   "Highlight matching brace
 set showcmd             " show command in bottom bar
 set title               " show file in titlebar
@@ -511,11 +513,6 @@ nnoremap gm :call cursor(0, len(getline('.'))/2)<CR>  " goto midle of line
 " nnoremap ]] ][
 " nnoremap [[ []
 
-" diff merge
-nnoremap <leader>d1 :diffget 1<CR>
-nnoremap <leader>d2 :diffget 2<CR>
-nnoremap <leader>d3 :diffget 3<CR>
-
 "Advanced
 set undolevels=1000 "Number of undo levels
 set backspace=indent,eol,start  "Backspace behaviour
@@ -548,26 +545,32 @@ command! Wroot :execute ':silent w !sudo tee % > /dev/null' | :edit!
 " fix typo
 command! W :w
 
+" UltiSnips
+let g:UltiSnipsExpandTrigger = "<C-l>"
+let g:UltiSnipsJumpForwardTrigger = "<C-j>"
+let g:UltiSnipsJumpBackwardTrigger = "<C-k>"
 
 "   YCM
 " http://stackoverflow.com/questions/3105307/how-do-you-automatically-remove-the-preview-window-after-autocompletion-in-vim
 " :h ins-completion.
 " :YcmDiags - errors
-let g:ycm_confirm_extra_conf = 0
-"let g:ycm_global_ycm_extra_conf = '~/bin/rc/.ycm_extra_conf.py' 
+let g:ycm_confirm_extra_conf = 1
+let g:ycm_global_ycm_extra_conf = '~/mantra/linuxrc/.ycm_extra_conf.py' 
 let g:ycm_error_symbol = 'e'
 let g:ycm_warning_symbol = 'w'
+let g:ycm_key_list_select_completion = ['<C-j>']
+let g:ycm_key_list_previous_completion = ['<C-k>']
 nnoremap <leader>yj :YcmCompleter GoToDefinitionElseDeclaration<CR>
 nnoremap <leader>yg :YcmCompleter GoTo<CR>
 nnoremap <leader>yi :YcmCompleter GoToImplementationElseDeclaration<CR>
 nnoremap <leader>yt :YcmCompleter GetTypeImprecise<CR>
 nnoremap <leader>yd :YcmCompleter GetDoc<CR>
-nnoremap <leader>yf :YcmCompleter FixIt<CR>
 nnoremap <leader>yr :YcmCompleter GoToReferences<CR>
 nnoremap <leader>ys :YcmDiags<CR>
 nnoremap <leader>yD ::YcmForceCompileAndDiagnostics<CR>
 nnoremap <leader>yR :YcmRestartServer<CR>
 nnoremap <F12> :YcmCompleter GoToDefinitionElseDeclaration<CR>
+nnoremap <F11> :YcmCompleter FixIt<CR>
 nnoremap <F10> :YcmCompleter GetTypeImprecise<CR>
 nnoremap <F9> :YcmCompleter GetDocImprecise<CR>
 "nnoremap <F5> :YcmForceCompileAndDiagnostics<CR>
@@ -724,52 +727,6 @@ if executable('ag')
 endif
 
 " -----------------------------------------------------------------------------
-"Work stuff clear case
-command! Ctpdiff :!cleartool diff -pre -col 190 % | less
-command! Ctpdiff2 :!cleartool diff -pre -ser % | less
-
-
-" -----------------------------------------------------------------------------
-" Fix autocompletions
-function! g:UltiSnips_Complete()
-  call UltiSnips#ExpandSnippet()
-  if g:ulti_expand_res == 0
-    if pumvisible()
-      return "\<C-n>"
-    else
-      call UltiSnips#JumpForwards()
-      if g:ulti_jump_forwards_res == 0
-        return "\<TAB>"
-      endif
-    endif
-  endif
-  return ""
-endfunction
-
-function! g:UltiSnips_Reverse()
-  call UltiSnips#JumpBackwards()
-  if g:ulti_jump_backwards_res == 0
-    return "\<C-P>"
-  endif
-
-  return ""
-endfunction
-
-
-if !exists("g:UltiSnipsJumpForwardTrigger")
-  let g:UltiSnipsJumpForwardTrigger = "<tab>"
-endif
-
-if !exists("g:UltiSnipsJumpBackwardTrigger")
-  let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
-endif
-
-au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger     . " <C-R>=g:UltiSnips_Complete()<cr>"
-au InsertEnter * exec "inoremap <silent> " .     g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"
-
-inoremap <silent><C-X><C-U> <C-R>=g:UltiSnips_Complete()<CR>
-
-" -----------------------------------------------------------------------------
 " execute macro on visal range
 xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
 
@@ -790,8 +747,8 @@ vnoremap . :norm.<CR>
 call system('mkdir ~/.vim')
 call system('mkdir ~/.vim/backup')
 call system('mkdir ~/.vim/swap')
-set backupdir=~/.vim/backup//
-set directory=~/.vim/swap//
+set backupdir=~/.vim/backup/
+set directory=~/.vim/swap/
 
 " Keep undo history across sessions by storing it in a file
 if has('persistent_undo')
@@ -839,3 +796,29 @@ function! BuildCMakeProject(target, dir)
 endfunction
 
 " -----------------------------------------------------------------------------
+command! -complete=shellcmd -nargs=+ Shell call s:RunShellCommand(<q-args>)
+function! s:RunShellCommand(cmdline)
+  let isfirst = 1
+  let words = []
+  for word in split(a:cmdline)
+    if isfirst
+      let isfirst = 0  " don't change first word (shell command)
+    else
+      if word[0] =~ '\v[%#<]'
+        let word = expand(word)
+      endif
+      let word = shellescape(word, 1)
+    endif
+    call add(words, word)
+  endfor
+  let expanded_cmdline = join(words)
+  botright new
+  setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap
+  call setline(1, 'You entered:  ' . a:cmdline)
+  call setline(2, 'Expanded to:  ' . expanded_cmdline)
+  call append(line('$'), substitute(getline(2), '.', '=', 'g'))
+  silent execute '$read !'. expanded_cmdline
+  1
+endfunction
+
+command! GitBlameCurr call s:RunShellCommand('git blame %')
