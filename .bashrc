@@ -56,12 +56,8 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
-if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-fi
-unset color_prompt force_color_prompt
+PS1="\[\e[32m\][\[\e[m\]\[\e[31m\]\u\[\e[m\]\[\e[33m\]@\[\e[m\]\[\e[32m\]\h\[\e[m\]:\[\e[36m\]\w\[\e[m\]\[\e[32m\]]\[\e[m\]\[\e[32;47m\]\\$\[\e[m\] "
+PS1='\n• \[\e[0;32m\]\u@\H\[\e[m\]•\[\e[1;34m\] \D{%Y-%m-%d} \A \[\e[m\]• \w\n• '
 
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
@@ -116,7 +112,9 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
-function gr { grep -irn --exclude=\*.{log,0,1,2,js} "$1" * ; }
+function gr {
+    grep -irn --exclude=\*.{log,0,1,2,js,$2} --exclude-dir=$2 "$1" * ;
+}
 
 #find file|dir entity up to file hierarhy
 find-up () {
@@ -126,6 +124,18 @@ find-up () {
   done
   echo "$path"
 }
+
+#goto root of project
+
+function cdr {
+    cd $(find-up ".repo")
+}
+
+
+function cdb {
+    cd $(find-up ".repo")/build
+}
+
 # generate a slice of compdb by specigfied subpath
 function compdb-slice {
     local output="compile_commands.json"
@@ -149,8 +159,10 @@ function format-commit() {
     git diff -U0 --no-color HEAD^ | clang-format-diff-5.0 -p1 -i ; }
 
 alias g="gvim"
+alias g_attach="gvim --remote-tab"
 
 export PATH=~/bin/git-repo:$PATH
+export PATH="$HOME/.cargo/bin:$PATH"
 # Yavide alias
 export MAP_PATH_PREFIX=~/maps/
 
