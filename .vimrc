@@ -14,7 +14,7 @@ Plugin 'VundleVim/Vundle.vim'
 
 " Keep Plugin commands between vundle#begin/end.
 Plugin 'bogado/file-line'
-
+Plugin 'rust-lang/rust.vim'
 Plugin 'tpope/vim-fugitive'
 
 Plugin 'tpope/vim-surround'
@@ -36,7 +36,7 @@ Plugin 'jpo/vim-railscasts-theme'
 
 Plugin 'scrooloose/nerdTree'
 
-Plugin 'Xuyuanp/nerdtree-git-plugin'  
+Plugin 'Xuyuanp/nerdtree-git-plugin'
 
 Plugin 'vim-scripts/indentpython.vim'
 
@@ -125,9 +125,11 @@ Plugin 'vim-scripts/ccase.vim'
 
 Plugin 'Valloric/YouCompleteMe'
 
-Plugin 'lyuts/vim-rtags'  
+Plugin 'lyuts/vim-rtags'
 
 Plugin 'kracejic/themeinabox.vim'
+
+Plugin 'vim-scripts/Conque-GDB'
 
 " Plugin 'Yggdroot/indentLine'
 
@@ -148,8 +150,11 @@ filetype plugin on
 "
 " see :h vundle for more details or wiki for FAQ
 " Put your non-Plugin stuff after this line
-
-
+"
+" ConqueGDB Setting
+let g:ConqueTerm_Color=2            " 1: strip color after 200 line, 2: always with color
+let g:ConqueTerm_CloseOnEnd=1       " close conque when program ends running
+let g:ConqueTerm_StartMessages=0    " display warning message if conqueTerm is configed incorrect
 
 "General
 set number  "Show line numbers
@@ -555,7 +560,7 @@ let g:UltiSnipsJumpBackwardTrigger = "<C-k>"
 " :h ins-completion.
 " :YcmDiags - errors
 let g:ycm_confirm_extra_conf = 1
-let g:ycm_global_ycm_extra_conf = '~/mantra/linuxrc/.ycm_extra_conf.py' 
+let g:ycm_global_ycm_extra_conf = '~/mantra/linuxrc/ycm/.ycm_extra_conf.py'
 let g:ycm_error_symbol = 'e'
 let g:ycm_warning_symbol = 'w'
 let g:ycm_key_list_select_completion = ['<C-j>']
@@ -742,7 +747,7 @@ vnoremap . :norm.<CR>
 
 " -----------------------------------------------------------------------------
 " Save temporary/backup files not in the local directory, but in your ~/.vim
-" directory, to keep them out of git repos. 
+" directory, to keep them out of git repos.
 " But first mkdir backup, swap, and undo first to make this work
 call system('mkdir ~/.vim')
 call system('mkdir ~/.vim/backup')
@@ -795,30 +800,4 @@ function! BuildCMakeProject(target, dir)
     endif
 endfunction
 
-" -----------------------------------------------------------------------------
-command! -complete=shellcmd -nargs=+ Shell call s:RunShellCommand(<q-args>)
-function! s:RunShellCommand(cmdline)
-  let isfirst = 1
-  let words = []
-  for word in split(a:cmdline)
-    if isfirst
-      let isfirst = 0  " don't change first word (shell command)
-    else
-      if word[0] =~ '\v[%#<]'
-        let word = expand(word)
-      endif
-      let word = shellescape(word, 1)
-    endif
-    call add(words, word)
-  endfor
-  let expanded_cmdline = join(words)
-  botright new
-  setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap
-  call setline(1, 'You entered:  ' . a:cmdline)
-  call setline(2, 'Expanded to:  ' . expanded_cmdline)
-  call append(line('$'), substitute(getline(2), '.', '=', 'g'))
-  silent execute '$read !'. expanded_cmdline
-  1
-endfunction
-
-command! GitBlameCurr call s:RunShellCommand('git blame %')
+set shellcmdflag=-ic
