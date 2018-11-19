@@ -94,6 +94,8 @@ Plugin 'lyuts/vim-rtags'
 
 Plugin 'kracejic/themeinabox.vim'
 
+Plugin 'vim-scripts/Conque-GDB'
+
 " Plugin 'Yggdroot/indentLine'
 
 " All of your Plugins must be added before the following line
