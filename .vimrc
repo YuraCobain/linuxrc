@@ -19,14 +19,12 @@ Plugin 'tpope/vim-fugitive'
 
 Plugin 'tpope/vim-surround'
 
-Plugin 'tomtom/tcomment_vim'
+Plugin 'machakann/vim-swap'
 
 Plugin 'bling/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 
 Plugin 'airblade/vim-gitgutter'
-
-Plugin 'easymotion/vim-easymotion'
 
 Plugin 'terryma/vim-multiple-cursors'
 
@@ -38,42 +36,23 @@ Plugin 'scrooloose/nerdTree'
 
 Plugin 'Xuyuanp/nerdtree-git-plugin'
 
-Plugin 'vim-scripts/indentpython.vim'
-
-Plugin 'vim-scripts/argtextobj.vim'
-
-" new text objects
-Plugin 'kana/vim-textobj-user'
-" f F text objects
-Plugin 'kana/vim-textobj-function'
-
 " User defined operators/actions
 Plugin 'kana/vim-operator-user'
 
 Plugin 'michaeljsmith/vim-indent-object'
 
-Plugin 'vimwiki/vimwiki'
-
 Plugin 'christoomey/vim-sort-motion'
-
-Plugin 'itchyny/calendar.vim'
 
 Plugin 'tomasr/molokai'
 
 Plugin 'octol/vim-cpp-enhanced-highlight'
 "Plugin 'jeaye/color_coded'
 
-Plugin 'godlygeek/tabular'
-Plugin 'plasticboy/vim-markdown' "better markdown support
-
 Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plugin 'junegunn/fzf.vim'
 
 " better cooperation with tmux
 Plugin 'christoomey/vim-tmux-navigator'
-
-" gutter for marks
-Plugin 'kshenoy/vim-signature'
 
 " Vim plug for switching between companion source files (e.g. .h and .cpp)
 Plugin 'derekwyatt/vim-fswitch'
@@ -84,13 +63,6 @@ Plugin 'rhysd/vim-clang-format'
 Plugin 'tpope/vim-obsession'
 Plugin 'dhruvasagar/vim-prosession'
 Plugin 'gikmx/ctrlp-obsession'
-
-" vim abolish does three things,
-" :Abolish {despa,sepe}rat{e,es,ed,ing,ely,ion,ions,or}  {despe,sepa}rat{}
-" :Subvert/blog{,s}/post{,s}/g
-" coercion - crs, crc change to snake case,
-"              change to camel case, cru upper case
-Plugin 'tpope/vim-abolish'
 
 " Snippets
 Plugin 'SirVer/ultisnips'
@@ -108,18 +80,11 @@ Plugin 'mileszs/ack.vim'
 
 Plugin 'vim-scripts/DoxygenToolkit.vim'
 
-
 Plugin 'vim-scripts/MultipleSearch'
 
 Plugin 'junegunn/vim-easy-align'
 
 Plugin 'lilydjwg/colorizer'
-
-Plugin 'sheerun/vim-polyglot'
-
-Plugin 'rhysd/devdocs.vim'
-
-let g:colorizer_startup = 0
 
 Plugin 'vim-scripts/ccase.vim'
 
@@ -128,8 +93,6 @@ Plugin 'Valloric/YouCompleteMe'
 Plugin 'lyuts/vim-rtags'
 
 Plugin 'kracejic/themeinabox.vim'
-
-Plugin 'vim-scripts/Conque-GDB'
 
 " Plugin 'Yggdroot/indentLine'
 
@@ -157,6 +120,7 @@ let g:ConqueTerm_CloseOnEnd=1       " close conque when program ends running
 let g:ConqueTerm_StartMessages=0    " display warning message if conqueTerm is configed incorrect
 
 "General
+let g:colorizer_startup = 0
 set number  "Show line numbers
 set relativenumber
 nmap <leader>num :set nu! <CR>:set rnu!<CR>
@@ -425,19 +389,20 @@ command! -range -nargs=0 -bar JsonTool <line1>,<line2>!python -m json.tool
 
 " CLANG FORMAT
 " default settings
-let g:clang_format#code_style = "llvm"
-let g:clang_format#style_options = {
-      \ "AllowShortFunctionsOnASingleLine": "Empty",
-      \ "AlwaysBreakTemplateDeclarations": "true",
-      \ "BreakBeforeBraces": "Allman",
-      \ "BreakConstructorInitializersBeforeComma": "true",
-      \ "IndentCaseLabels": "true",
-      \ "IndentWidth":     4,
-      \ "MaxEmptyLinesToKeep": 2,
-      \ "NamespaceIndentation": "Inner",
-      \ "ObjCBlockIndentWidth": 4,
-      \ "TabWidth": 4}
+"let g:clang_format#code_style = "llvm"
+"let g:clang_format#style_options = {
+"      \ "AllowShortFunctionsOnASingleLine": "Empty",
+"      \ "AlwaysBreakTemplateDeclarations": "true",
+"      \ "BreakBeforeBraces": "Allman",
+"      \ "BreakConstructorInitializersBeforeComma": "true",
+"      \ "IndentCaseLabels": "true",
+"      \ "IndentWidth":     4,
+"      \ "MaxEmptyLinesToKeep": 2,
+"      \ "NamespaceIndentation": "Inner",
+"      \ "ObjCBlockIndentWidth": 4,
+"      \ "TabWidth": 4}
 
+let g:clang_format#detect_style_file = 1
 augroup ClangFormatSettings
     autocmd!
     " map to <Leader>cf in C++ code
@@ -560,7 +525,7 @@ let g:UltiSnipsJumpBackwardTrigger = "<C-k>"
 " :h ins-completion.
 " :YcmDiags - errors
 let g:ycm_confirm_extra_conf = 1
-let g:ycm_global_ycm_extra_conf = '~/mantra/linuxrc/ycm/.ycm_extra_conf.py'
+let g:ycm_global_ycm_extra_conf = '~/env/linuxrc/ycm/.ycm_extra_conf.py'
 let g:ycm_error_symbol = 'e'
 let g:ycm_warning_symbol = 'w'
 let g:ycm_key_list_select_completion = ['<C-j>']
@@ -800,4 +765,4 @@ function! BuildCMakeProject(target, dir)
     endif
 endfunction
 
-set shellcmdflag=-ic
+"set shellcmdflag=-ic
