@@ -2,7 +2,6 @@ import os
 import os.path
 import sys
 import json
-import ycm_core
 
 
 YCM_PROJECT_FILENAME = 'ycm_project.json'
@@ -20,34 +19,29 @@ BASE_FLAGS = [
     '-fexceptions',
     '-DNDEBUG',
     '-std=c++14',
-    '-x c++',
-    '-I/usr/lib',
-    '-I/usr/include',
-    '-I/usr/local/lib',
-    '-I/usr/local/inlude',
-    '-I/home/kobein/dev/projects/motegi/common/include',
-    '-I/home/kobein/dev/projects/motegi/srchcommon/include/here',
-    '-I/home/kobein/dev/projects/motegi/external/googlemock/upstream/googletest/include',
-    '-I/home/kobein/dev/projects/motegi/search/ngeo/test/lib/include/here/ngeo',
-    '-I/home/kobein/dev/projects/motegi/search/dal/include',
-    '-I/home/kobein/dev/projects/motegi/dal/include',
+    '-I/home/iurii/dev/ezloml_dev/ezloml_master',
+    '-I/home/iurii/dev/ezloml_dev/ezloml_master/src/',
+    '-I/home/iurii/dev/ezloml_dev/ezloml_master/src/classification',
+    '-I/home/iurii/dev/ezloml_dev/ezloml_master/src/controller',
+    '-I/home/iurii/dev/ezloml_dev/ezloml_master/src/media',
+    '-I/home/iurii/dev/ezloml_dev/ezloml_master/src/pipeline',
+    '-I/home/iurii/dev/ezloml_dev/ezloml_master/src/utils',
+    '-I/home/iurii/dev/ezloml_dev/ezloml_master/tests',
+    '-I/usr/local/include/opencv4/',
+    '-I/usr/local/include/boost',
+    '-Werror=return-type',
+    '-x', 'c++',
 ]
 
 SYSTEM_NAME = os.uname()[0]
 
-if SYSTEM_NAME == 'Darwin':
-    SYSTEM_SPECIFIED_FLAGS = [
-        '-I/usr/local/opt/openssl/include',
-        '-I/usr/local/opt/qt5/include',
-        '-I/usr/local/opt/icu4c/include',
-        '-isystem', '/usr/local/Frameworks/Python.framework/Versions/3.6/Headers',
-    ]
-elif SYSTEM_NAME == 'Linux':
-    SYSTEM_SPECIFIED_FLAGS = [
-        '-I/usr/include/c++/5',
-    ]
-else:
-    SYSTEM_SPECIFIED_FLAGS = []
+SYSTEM_SPECIFIED_FLAGS = [
+    '-isystem', '/usr/lib/gcc/x86_64-linux-gnu/7/include',
+    '-isystem', '/usr/local/include',
+    '-isystem', '/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed',
+    '-isystem', '/usr/include/x86_64-linux-gnu',
+    '-isystem', '/usr/include',
+]
 
 BASE_FLAGS.extend(SYSTEM_SPECIFIED_FLAGS)
 

@@ -1,0 +1,8 @@
+my_plugins
+├── vim-clang-format
+├── vim-fswitch
+├── vim-operator-user
+├── YCM-Generator
+└── YouCompleteMe
+
+5 directories, 0 files
